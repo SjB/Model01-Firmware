@@ -43,6 +43,8 @@ mkdir -p hardware/keyboardio
 
 ## then clone the hardware definitions to make them available to the arduino environment
 git clone --recursive https://github.com/keyboardio/Arduino-Boards.git hardware/keyboardio/avr
+git clone --recursive https://github.com/ToyKeeper/Kaleidoscope-LED-Wavepool hardware/keyboardio/avr/libraries/Kaleidoscope-LED-Wavepool
+git clone --recursive https://github.com/tremby/Kaleidoscope-LEDEffect-DigitalRain hardware/keyboardio/avr/libraries/Kaleidoscope-LEDEffect-DigitalRain
 ````
 
 
