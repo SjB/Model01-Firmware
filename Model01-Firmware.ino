@@ -39,7 +39,7 @@
 #include "Kaleidoscope-TapDance.h"
 
 // SpaceCadet :tap shift keys to insert parens
-#include "Kaleidoscope-SpaceCadet.h"
+//#include "Kaleidoscope-SpaceCadet.h"
 
 #include "Kaleidoscope-LED-ActiveModColor.h"
 
@@ -101,38 +101,36 @@ enum {
 #define F_MAX LALT(Key_F10)
 #define F_TSKSWCH M(MACRO_TSKSWCH)
 
-//#define MT_TAB MT(RightAlt, Tab)
-#define MT_TAB Key_Tab
+#define MT_Escape MT(RightAlt, Escape)
 #define MT_LeftBracket MT(RightAlt, LeftBracket)
 #define MT_RightBracket MT(RightAlt, RightBracket)
 
 #define TD_TERM TD(TAPDANCE_TERM)
 
 // #define SJB_HOME ((Key) { .raw = HID_CONSUMER_AL_LOCAL_MACHINE_BROWSER }) // | ((Key) {0, KEY_FLAGS | SYNTHETIC|IS_CONSUMER  | HID_TYPE_RTC }).raw})
-
-#define SJB_HOME M(MACRO_FILES)
-#define SJB_CALC M(MACRO_CALC)
-#define SJB_SEARCH M(MACRO_SEARCH)
-#define SJB_EMAIL M(MACRO_EMAIL)
-#define SJB_BROWSER M(MACRO_BROWSER)
+#define SJB_HOME Consumer_AL_Local_MachineBrowser
+#define SJB_CALC Consumer_AL_Calculator
+#define SJB_SEARCH Consumer_AC_Search 
+#define SJB_EMAIL Consumer_AL_Email_Reader
+#define SJB_BROWSER Consumer_AL_InternetBrowser
 
 enum { QWERTY, FUNCTION, NUMPAD }; // layers
 
 const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [QWERTY] = KEYMAP_STACKED
-  (XXX,        Key_1,       Key_2,         Key_3,      Key_4, Key_5, TD_TERM,
-   Key_Backtick,      Key_Q,       Key_W,         Key_E,      Key_R, Key_T, Key_Tab,
-   Key_Backslash,     Key_A,       Key_S,         Key_D,      Key_F, Key_G,
-   Key_LeftBracket,   Key_Z,       Key_X,         Key_C,      Key_V, Key_B, Key_Escape,
-   Key_LeftAlt,       Key_LeftControl, Key_Backspace, Key_LeftShift, 
+  (XXX,               Key_1,            Key_2,         Key_3,      Key_4, Key_5, TD_TERM,
+   Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, Key_Tab,
+   Key_Backslash,     Key_A,            Key_S,         Key_D,      Key_F, Key_G,
+   Key_LeftBracket,   Key_Z,            Key_X,         Key_C,      Key_V, Key_B, Key_Escape,
+   OSM(LeftAlt),      OSM(LeftControl), Key_Backspace, OSM(LeftShift), 
    OSL(FUNCTION),
 
-   SJB_HOME,          Key_6,     Key_7,        Key_8,            Key_9,      Key_0,         Key_Minus,
-   Key_Enter,         Key_Y,     Key_U,        Key_I,            Key_O,      Key_P,         Key_Equals,
-                      Key_H,     Key_J,        Key_K,            Key_L,      Key_Semicolon, Key_Quote,
-   OSM(RightAlt),     Key_N,     Key_M,        Key_Comma,        Key_Period, Key_Slash,     Key_RightBracket,
-   Key_RightShift,    Key_Spacebar, Key_RightControl, Key_LeftGui, 
+   SJB_HOME,          Key_6,        Key_7,             Key_8,       Key_9,      Key_0,         Key_Minus,
+   Key_Enter,         Key_Y,        Key_U,             Key_I,       Key_O,      Key_P,         Key_Equals,
+                      Key_H,        Key_J,             Key_K,       Key_L,      Key_Semicolon, Key_Quote,
+   OSM(LeftAlt),      Key_N,        Key_M,             Key_Comma,   Key_Period, Key_Slash,     Key_RightBracket,
+   OSM(RightShift),   Key_Spacebar, OSM(RightControl), Key_LeftGui, 
    OSL(FUNCTION)),
 
   [FUNCTION] =  KEYMAP_STACKED
@@ -145,7 +143,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    ___,           Key_F6,         Key_F7,        Key_F8,      Key_F9,         Key_F10,          Key_F11,
    ___,           Key_Home,       Key_PageDown,  Key_PageUp,  Key_End,        Key_PrintScreen,  Key_F12,
                   Key_LeftArrow,  Key_DownArrow, Key_UpArrow, Key_RightArrow, Key_Insert,       ___,
-   ___,           SJB_CALC,       SJB_SEARCH,    SJB_EMAIL,   SJB_BROWSER,    F_TSKSWCH,        ___,
+   ___,           SJB_CALC,       SJB_SEARCH,    SJB_EMAIL,   SJB_BROWSER,    F_TSKSWCH,        Consumer_Sleep,
    ___,           Key_Enter,      ___,     ___,
    ___),
 
@@ -270,7 +268,7 @@ void setup() {
     &DualUse,
     &OneShot,
 //    &EscapeOneShot,
-    &SpaceCadet,
+//    &SpaceCadet,
     &TapDance
   );
 
@@ -290,12 +288,12 @@ void setup() {
   StalkerEffect.activate();
 
   // define SpaceCadet map
-  static kaleidoscope::SpaceCadet::KeyBinding spacecadetmap[] = {
-    {Key_LeftShift, Key_LeftParen, 250}
-    , {Key_RightShift, Key_RightParen, 250}
-    , SPACECADET_MAP_END
-  };
-  SpaceCadet.map = spacecadetmap;
+  // static kaleidoscope::SpaceCadet::KeyBinding spacecadetmap[] = {
+  //   {Key_LeftShift, Key_LeftParen, 250}
+  //   , {Key_RightShift, Key_RightParen, 250}
+  //   , SPACECADET_MAP_END
+  // };
+  // SpaceCadet.map = spacecadetmap;
 }
 
 void loop() {
