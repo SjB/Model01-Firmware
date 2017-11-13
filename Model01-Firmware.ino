@@ -120,28 +120,28 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [QWERTY] = KEYMAP_STACKED
   (XXX,               Key_1,            Key_2,         Key_3,      Key_4, Key_5, TD_TERM,
-   Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, Key_Tab,
+   Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, XXX,
    Key_Backslash,     Key_A,            Key_S,         Key_D,      Key_F, Key_G,
-   Key_LeftBracket,   Key_Z,            Key_X,         Key_C,      Key_V, Key_B, Key_Escape,
+   Key_LeftBracket,   Key_Z,            Key_X,         Key_C,      Key_V, Key_B, Key_Tab,
    OSM(LeftAlt),      OSM(LeftControl), Key_Backspace, OSM(LeftShift), 
    OSL(FUNCTION),
 
-   SJB_HOME,          Key_6,        Key_7,             Key_8,       Key_9,      Key_0,         Key_Minus,
-   Key_Enter,         Key_Y,        Key_U,             Key_I,       Key_O,      Key_P,         Key_Equals,
-                      Key_H,        Key_J,             Key_K,       Key_L,      Key_Semicolon, Key_Quote,
-   OSM(LeftAlt),      Key_N,        Key_M,             Key_Comma,   Key_Period, Key_Slash,     Key_RightBracket,
-   OSM(RightShift),   Key_Spacebar, OSM(RightControl), Key_LeftGui, 
+   OSM(RightAlt),     Key_6,        Key_7,        Key_8,       Key_9,      Key_0,         Key_Minus,
+   XXX,               Key_Y,        Key_U,        Key_I,       Key_O,      Key_P,         Key_Equals,
+                      Key_H,        Key_J,        Key_K,       Key_L,      Key_Semicolon, Key_Quote,
+   Key_Escape,        Key_N,        Key_M,        Key_Comma,   Key_Period, Key_Slash,     Key_RightBracket,
+   OSM(RightShift),   Key_Enter,    Key_Spacebar, Key_LeftGui, 
    OSL(FUNCTION)),
 
   [FUNCTION] =  KEYMAP_STACKED
   (Key_NumLock,   Key_F1,         Key_F2,        Key_F3,        Key_F4,           Key_F5,             Key_LEDEffectNext,
    ___,           Key_mouseBtnL,  Key_mouseUp,   Key_mouseBtnR, Key_mouseBtnM,    XXX,                F_MAX,
    ___,           Key_mouseL,     Key_mouseDn,   Key_mouseR,    Key_mouseScrollL, Key_mouseScrollUp,
-   ___,           Key_VolumeDown, Key_VolumeUp,  Key_Mute,      Key_mouseScrollR, Key_mouseScrollDn,  XXX,
+   ___,           Key_VolumeDown, Key_VolumeUp,  Key_Mute,      Key_mouseScrollR, Key_mouseScrollDn,  ___,
    ___,           ___,            Key_Delete,    ___,
    ___,
-   ___,           Key_F6,         Key_F7,        Key_F8,      Key_F9,         Key_F10,          Key_F11,
-   ___,           Key_Home,       Key_PageDown,  Key_PageUp,  Key_End,        Key_PrintScreen,  Key_F12,
+   XXX,           Key_F6,         Key_F7,        Key_F8,      Key_F9,         Key_F10,          Key_F11,
+   SJB_HOME,      Key_Home,       Key_PageDown,  Key_PageUp,  Key_End,        Key_PrintScreen,  Key_F12,
                   Key_LeftArrow,  Key_DownArrow, Key_UpArrow, Key_RightArrow, Key_Insert,       ___,
    ___,           SJB_CALC,       SJB_SEARCH,    SJB_EMAIL,   SJB_BROWSER,    F_TSKSWCH,        Consumer_Sleep,
    ___,           Key_Enter,      ___,     ___,
@@ -178,24 +178,8 @@ static void ConsumerKeyWrite(uint8_t keyState, uint16_t hid_code) {
   }
 }
 
-// static void selectApplication(uint8_t keyState)
-// {
-// 	if (!keyWasPressed(keyState) && keyIsPressed(keyState)) {
-// 		handleKeyswitchEvent(Key_LeftGui, UNKNOWN_KEYSWITCH_LOCATION, INJECTED | IS_PRESSED);
-// 		kaleidoscope::hid::sendKeyboardReport();
-// 		handleKeyswitchEvent(Key_LeftGui, UNKNOWN_KEYSWITCH_LOCATION, INJECTED | WAS_PRESSED);
-// 		kaleidoscope::hid::sendKeyboardReport();
-// 		delay(250);
-// 	}
 
-// 	if (keyWasPressed(keyState) && keyIsPressed(keyState)) {
-// 		handleKeyswitchEvent(Key_LeftAlt, UNKNOWN_KEYSWITCH_LOCATION, INJECTED | IS_PRESSED | WAS_PRESSED);
-// 		kaleidoscope::hid::sendKeyboardReport();
-// 	}
-// }
-
-static uint8_t macroTskswchHold = 0;
-
+static int tskwsch_count = 0;
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   switch (macroIndex) {
 
@@ -218,11 +202,7 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 	  ConsumerKeyWrite(keyState, HID_CONSUMER_AL_INTERNET_BROWSER);
 	  break;
   case MACRO_TSKSWCH:
-	  if (keyToggledOn(keyState)) {
-		  handleKeyswitchEvent(LGUI(Key_Tab), UNKNOWN_KEYSWITCH_LOCATION, INJECTED | IS_PRESSED);
-		  kaleidoscope::hid::sendKeyboardReport();
-	  }
-	  break;
+	  return MACRODOWN(D(LeftGui), T(Tab), U(LeftGui));
   }
   return MACRO_NONE;
 }
