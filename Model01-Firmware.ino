@@ -25,9 +25,6 @@
 // Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
 
-// Support for "Numlock" mode, which is mostly just the Numlock specific LED mode
-#include "Kaleidoscope-Numlock.h"
-
 // Support DualUse features
 #include "Kaleidoscope-DualUse.h"
 
@@ -82,7 +79,8 @@ enum {
 	MACRO_SEARCH,
 	MACRO_EMAIL,
 	MACRO_BROWSER,
-	MACRO_TSKSWCH
+	MACRO_TSKSWCH,
+	MACRO_VIM_CMD
 };
 
 enum {
@@ -91,7 +89,6 @@ enum {
 
 
 
-#define Key_NumLock Key_KeypadNumLock
 #define L(k) (LSHIFT(Key_ ## k))
 
 #define LCA(k) ((Key) { k.keyCode, k.flags | CTRL_HELD | LALT_HELD })
@@ -113,6 +110,7 @@ enum {
 #define SJB_SEARCH Consumer_AC_Search 
 #define SJB_EMAIL Consumer_AL_Email_Reader
 #define SJB_BROWSER Consumer_AL_InternetBrowser
+#define Key_NumLock LockLayer(NUMPAD)
 
 enum { QWERTY, FUNCTION, NUMPAD }; // layers
 
@@ -120,7 +118,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [QWERTY] = KEYMAP_STACKED
   (XXX,               Key_1,            Key_2,         Key_3,      Key_4, Key_5, TD_TERM,
-   Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, XXX,
+   Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, M(MACRO_VIM_CMD),
    Key_Backslash,     Key_A,            Key_S,         Key_D,      Key_F, Key_G,
    Key_LeftBracket,   Key_Z,            Key_X,         Key_C,      Key_V, Key_B, Key_Escape,
    OSM(LeftShift),    OSM(LeftControl), Key_Backspace, Key_LeftGui, 
@@ -203,6 +201,8 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 	  break;
   case MACRO_TSKSWCH:
 	  return MACRODOWN(D(LeftGui), T(Tab), U(LeftGui));
+  case MACRO_VIM_CMD:
+	  return MACRODOWN(T(Escape), D(LeftShift), T(Semicolon), U(LeftShift));
   }
   return MACRO_NONE;
 }
@@ -230,19 +230,18 @@ void setup() {
   Kaleidoscope.use(
 	  //   &BootGreetingEffect,
     &LEDControl,
-    &LEDOff,
+    &StalkerEffect,
+    &LEDDigitalRainEffect,
+    &WavepoolEffect,
     &LEDRainbowEffect,
     &LEDRainbowWaveEffect,
     &LEDChaseEffect,
     &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
     &LEDBreatheEffect,
     &AlphaSquareEffect,
-    &StalkerEffect,
     &ActiveModColorEffect,
-    &LEDDigitalRainEffect,
-    &WavepoolEffect,
+    &LEDOff,
     
-    &NumLock,
     &Macros,
     &MouseKeys,
     &DualUse,
@@ -251,8 +250,6 @@ void setup() {
 //    &SpaceCadet,
     &TapDance
   );
-
-  NumLock.numPadLayer = NUMPAD;
 
   ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);
   AlphaSquare.color = { 0, 255, 0 };
@@ -264,7 +261,8 @@ void setup() {
 
   WavepoolEffect.idle_timeout = 5000;
 
-  StalkerEffect.variant = STALKER(BlazingTrail);
+  //StalkerEffect.variant = STALKER(BlazingTrail);
+  StalkerEffect.variant = STALKER(Haunt);
   StalkerEffect.activate();
 
   // define SpaceCadet map
