@@ -4,73 +4,26 @@
 #define BUILD_INFORMATION "SjB Keymap built"
 #endif
 
-
-/**
- * These #include directives pull in the Kaleidoscope firmware core,
- * as well as the Kaleidoscope plugins we use in the Model 01's firmware
- */
-
-
 // The Kaleidoscope core
 #include "Kaleidoscope.h"
-
 #include "kaleidoscope/hid.h"
-
-// Support for keys that move the mouse
 #include "Kaleidoscope-MouseKeys.h"
-
-// Support for macros
 #include "Kaleidoscope-Macros.h"
-
-// Support for controlling the keyboard's LEDs
 #include "Kaleidoscope-LEDControl.h"
-
-// Support DualUse features
 #include "Kaleidoscope-DualUse.h"
-
-// Support One-Shot features
 #include "Kaleidoscope-OneShot.h"
-//#include "Kaleidoscope-Escape-OneShot.h"
-
-// Support TapDance features
 #include "Kaleidoscope-TapDance.h"
 
-// SpaceCadet :tap shift keys to insert parens
-//#include "Kaleidoscope-SpaceCadet.h"
-
 #include "Kaleidoscope-LED-ActiveModColor.h"
-
 #include "Kaleidoscope-LEDEffect-DigitalRain.h"
 #include "Kaleidoscope-LED-Wavepool.h"
-
-// Support for an "LED off mode"
 #include "LED-Off.h"
-
-// Support for the "Boot greeting" effect, which pulses the 'LED' button for 10s
-// when the keyboard is connected to a computer (or that computer is powered on)
-//#include "Kaleidoscope-LEDEffect-BootGreeting.h"
-
-// Support for LED modes that set all LEDs to a single color
 #include "Kaleidoscope-LEDEffect-SolidColor.h"
-
-// Support for an LED mode that makes all the LEDs 'breathe'
 #include "Kaleidoscope-LEDEffect-Breathe.h"
-
-// Support for an LED mode that makes a red pixel chase a blue pixel across the keyboard
 #include "Kaleidoscope-LEDEffect-Chase.h"
-
-// Support for LED modes that pulse the keyboard's LED in a rainbow pattern
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
-
-// Support for an LED mode that lights up the keys as you press them
 #include "Kaleidoscope-LED-Stalker.h"
-
-// Support for an LED mode that prints the keys you press in letters 4px high
 #include "Kaleidoscope-LED-AlphaSquare.h"
-
-// Support for Keyboardio's internal keyboard testing mode
-//#include "Kaleidoscope-Model01-TestMode.h"
-
 
 enum {
 	MACRO_VERSION_INFO,
@@ -198,7 +151,6 @@ void setup() {
 
   ConsumerControl.begin();
   Kaleidoscope.use(
-	  //   &BootGreetingEffect,
     &LEDControl,
     &StalkerEffect,
     &LEDDigitalRainEffect,
@@ -216,8 +168,6 @@ void setup() {
     &MouseKeys,
     &DualUse,
     &OneShot,
-//    &EscapeOneShot,
-//    &SpaceCadet,
     &TapDance
   );
 
@@ -235,13 +185,6 @@ void setup() {
   StalkerEffect.variant = STALKER(Haunt);
   StalkerEffect.activate();
 
-  // define SpaceCadet map
-  // static kaleidoscope::SpaceCadet::KeyBinding spacecadetmap[] = {
-  //   {Key_LeftShift, Key_LeftParen, 250}
-  //   , {Key_RightShift, Key_RightParen, 250}
-  //   , SPACECADET_MAP_END
-  // };
-  // SpaceCadet.map = spacecadetmap;
 }
 
 void loop() {
