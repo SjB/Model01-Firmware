@@ -74,11 +74,6 @@
 
 enum {
 	MACRO_VERSION_INFO,
-	MACRO_FILES,
-	MACRO_CALC,
-	MACRO_SEARCH,
-	MACRO_EMAIL,
-	MACRO_BROWSER,
 	MACRO_TSKSWCH,
 	MACRO_VIM_CMD
 };
@@ -169,35 +164,10 @@ static void versionInfoMacro(uint8_t keyState) {
   }
 }
 
-static void ConsumerKeyWrite(uint8_t keyState, uint16_t hid_code) {
-  if (keyToggledOn(keyState)) {
-	  ConsumerControl.write(hid_code);
-	  Keyboard.sendReport();
-  }
-}
-
-
-static int tskwsch_count = 0;
 const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   switch (macroIndex) {
-
   case MACRO_VERSION_INFO:
 	  versionInfoMacro(keyState);
-	  break;
-  case MACRO_FILES:
-	  ConsumerKeyWrite(keyState, HID_CONSUMER_AL_LOCAL_MACHINE_BROWSER);
-	  break;
-  case MACRO_CALC:
-	  ConsumerKeyWrite(keyState, HID_CONSUMER_AL_CALCULATOR);
-	  break;
-  case MACRO_SEARCH:
-	  ConsumerKeyWrite(keyState, HID_CONSUMER_AC_SEARCH);
-	  break;
-  case MACRO_EMAIL:
-	  ConsumerKeyWrite(keyState, HID_CONSUMER_AL_EMAIL_READER);
-	  break;
-  case MACRO_BROWSER:
-	  ConsumerKeyWrite(keyState, HID_CONSUMER_AL_INTERNET_BROWSER);
 	  break;
   case MACRO_TSKSWCH:
 	  return MACRODOWN(D(LeftGui), T(Tab), U(LeftGui));
