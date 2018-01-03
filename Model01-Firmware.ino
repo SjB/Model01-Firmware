@@ -77,7 +77,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    Key_Enter,         Key_Y,        Key_U,        Key_I,       Key_O,      Key_P,         Key_Equals,
                       Key_H,        Key_J,        Key_K,       Key_L,      Key_Semicolon, Key_Quote,
    Key_Tab,           Key_N,        Key_M,        Key_Comma,   Key_Period, Key_Slash,     Key_RightBracket,
-   OSM(LeftAlt),      Key_LeftGui,  Key_Spacebar, OSM(RightShift),
+   OSM(LeftAlt),      Key_Spacebar, Key_LeftGui,  OSM(RightShift),
    OSL(FUNCTION)),
 
   [FUNCTION] =  KEYMAP_STACKED
