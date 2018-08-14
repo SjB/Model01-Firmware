@@ -6,14 +6,17 @@
 
 // The Kaleidoscope core
 #include "Kaleidoscope.h"
-#include "kaleidoscope/hid.h"
 #include "Kaleidoscope-MouseKeys.h"
 #include "Kaleidoscope-Macros.h"
 #include "Kaleidoscope-LEDControl.h"
+//#include "Kaleidoscope-NumPad.h"
+#include "LED-Off.h"
 #include "Kaleidoscope-DualUse.h"
 #include "Kaleidoscope-OneShot.h"
 #include "Kaleidoscope-TapDance.h"
 #include "Kaleidoscope-HostPowerManagement.h"
+#include "Kaleidoscope-MagicCombo.h"
+#include "Kaleidoscope-USB-Quirks.h"
 
 #include "Kaleidoscope-LED-ActiveModColor.h"
 #include "Kaleidoscope-LEDEffect-DigitalRain.h"
@@ -23,6 +26,7 @@
 #include "Kaleidoscope-LEDEffect-Breathe.h"
 #include "Kaleidoscope-LEDEffect-Chase.h"
 #include "Kaleidoscope-LEDEffect-Rainbow.h"
+#include "Kaleidoscope-LEDEffect-BootGreeting.h"
 #include "Kaleidoscope-LED-Stalker.h"
 #include "Kaleidoscope-LED-AlphaSquare.h"
 
@@ -36,9 +40,6 @@ enum {
 	TAPDANCE_TERM
 };
 
-
-
-#define L(k) (LSHIFT(Key_ ## k))
 
 #define LCA(k) ((Key) { k.keyCode, k.flags | CTRL_HELD | LALT_HELD })
 #define LSS(k) ((Key) { k.keyCode, k.flags | SHIFT_HELD | GUI_HELD })
@@ -63,11 +64,10 @@ enum {
 
 enum { QWERTY, FUNCTION, NUMPAD }; // layers
 
-const Key keymaps[][ROWS][COLS] PROGMEM = {
-
+KEYMAPS(
   [QWERTY] = KEYMAP_STACKED
   (XXX,               Key_1,            Key_2,         Key_3,      Key_4, Key_5, TD_TERM,
-   Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, M(MACRO_VIM_CMD),
+   Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, LCTRL(Key_Spacebar),
    Key_Backslash,     Key_A,            Key_S,         Key_D,      Key_F, Key_G,
    Key_LeftBracket,   Key_Z,            Key_X,         Key_C,      Key_V, Key_B, Key_Escape,
    OSM(LeftShift),    OSM(LeftControl), Key_Backspace, OSM(LeftAlt), 
@@ -97,9 +97,9 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
 
   [NUMPAD] =  KEYMAP_STACKED
   (Key_NumLock, XXX,       XXX,            XXX,             XXX,             XXX,              XXX,
-   XXX,         L(1),      L(2),           L(3),            L(4),            L(5),             ___,
-   XXX,         L(6),      L(7),           L(8),            L(9),            L(0), 
-   XXX,         Key_Slash, L(LeftBracket), L(RightBracket), Key_LeftBracket, Key_RightBracket, Key_Escape,
+   XXX,         LSHIFT(Key_1),  LSHIFT(Key_2),       LSHIFT(Key_3),        LSHIFT(Key_4),        LSHIFT(Key_5),         ___,
+   XXX,         LSHIFT(Key_6),  LSHIFT(Key_7),       LSHIFT(Key_8),        LSHIFT(Key_9),        LSHIFT(Key_0), 
+   XXX,         Key_Slash, LSHIFT(Key_LeftBracket), LSHIFT(Key_RightBracket), Key_LeftBracket, Key_RightBracket, Key_Escape,
    ___, ___, ___, ___,
    ___,
 
@@ -109,7 +109,7 @@ const Key keymaps[][ROWS][COLS] PROGMEM = {
    XXX,                    Key_Backslash, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadDivide,   Key_Enter,
    ___, ___, ___, ___,
    ___)
-};
+)
 
 static void versionInfoMacro(uint8_t keyState) {
   if (keyToggledOn(keyState)) {
@@ -167,33 +167,56 @@ void hostPowerManagementEventHandler(kaleidoscope::HostPowerManagement::Event ev
   toggleLedsOnSuspendResume(event);
 }
 
+enum {
+  COMBO_TOGGLE_NKRO_MODE
+};
+
+static void toggleKeyboardProtocol(uint8_t combo_index) {
+  USBQuirks.toggleKeyboardProtocol();
+}
+
+USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
+                  // Left Fn + Esc + Shift
+                  .keys = { R3C6, R2C6, R3C7 }
+                 });
+
+KALEIDOSCOPE_INIT_PLUGINS(
+			  BootGreetingEffect,
+			  LEDControl,
+			  LEDOff,
+			  StalkerEffect,
+			  LEDDigitalRainEffect,
+			  WavepoolEffect,
+			  LEDRainbowEffect,
+			  LEDRainbowWaveEffect,
+			  LEDChaseEffect,
+			  solidRed,
+			  solidOrange,
+			  solidYellow,
+			  solidGreen,
+			  solidBlue,
+			  solidIndigo,
+			  solidViolet,
+			  LEDBreatheEffect,
+			  AlphaSquareEffect,
+			  ActiveModColorEffect,
+			  LEDOff,
+    
+			  Macros,
+			  MouseKeys,
+			  DualUse,
+			  OneShot,
+			  TapDance,
+
+			  HostPowerManagement,
+			  MagicCombo,
+			  USBQuirks
+			  );
 
 void setup() {
   Kaleidoscope.setup();
 
-  ConsumerControl.begin();
-  Kaleidoscope.use(
-    &LEDControl,
-    &StalkerEffect,
-    &LEDDigitalRainEffect,
-    &WavepoolEffect,
-    &LEDRainbowEffect,
-    &LEDRainbowWaveEffect,
-    &LEDChaseEffect,
-    &solidRed, &solidOrange, &solidYellow, &solidGreen, &solidBlue, &solidIndigo, &solidViolet,
-    &LEDBreatheEffect,
-    &AlphaSquareEffect,
-    &ActiveModColorEffect,
-    &LEDOff,
-    
-    &Macros,
-    &MouseKeys,
-    &DualUse,
-    &OneShot,
-    &TapDance,
-
-    &HostPowerManagement
-  );
+  // ConsumerControl.begin();
 
   ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);
   AlphaSquare.color = { 0, 255, 0 };
@@ -205,11 +228,9 @@ void setup() {
 
   WavepoolEffect.idle_timeout = 5000;
 
-  HostPowerManagement.enableWakeup();
-  
   StalkerEffect.variant = STALKER(BlazingTrail);
   //StalkerEffect.variant = STALKER(Haunt);
-  StalkerEffect.activate();
+  LEDOff.activate();
 
 }
 
