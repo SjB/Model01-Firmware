@@ -20,7 +20,7 @@
 
 #include "Kaleidoscope-LED-ActiveModColor.h"
 #include "Kaleidoscope-LEDEffect-DigitalRain.h"
-#include "Kaleidoscope-LED-Wavepool.h"
+//#include "Kaleidoscope-LED-Wavepool.h"
 #include "LED-Off.h"
 #include "Kaleidoscope-LEDEffect-SolidColor.h"
 #include "Kaleidoscope-LEDEffect-Breathe.h"
@@ -210,6 +210,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
 			  HostPowerManagement,
 			  MagicCombo,
+
 			  USBQuirks
 			  );
 
@@ -226,7 +227,7 @@ void setup() {
 
   LEDDigitalRainEffect.DROP_TICKS = 22;
 
-  WavepoolEffect.idle_timeout = 5000;
+  //WavepoolEffect.idle_timeout = 5000;
 
   StalkerEffect.variant = STALKER(BlazingTrail);
   //StalkerEffect.variant = STALKER(Haunt);
