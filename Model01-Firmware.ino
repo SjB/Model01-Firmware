@@ -40,6 +40,7 @@ enum {
 	TAPDANCE_TERM
 };
 
+enum { QWERTY, FUNCTION, NUMPAD }; // layers
 
 #define LCA(k) ((Key) { k.keyCode, k.flags | CTRL_HELD | LALT_HELD })
 #define LSS(k) ((Key) { k.keyCode, k.flags | SHIFT_HELD | GUI_HELD })
@@ -61,8 +62,6 @@ enum {
 #define SJB_EMAIL Consumer_AL_Email_Reader
 #define SJB_BROWSER Consumer_AL_InternetBrowser
 #define Key_NumLock LockLayer(NUMPAD)
-
-enum { QWERTY, FUNCTION, NUMPAD }; // layers
 
 KEYMAPS(
   [QWERTY] = KEYMAP_STACKED
