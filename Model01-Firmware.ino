@@ -199,7 +199,6 @@ KALEIDOSCOPE_INIT_PLUGINS(
 			  LEDBreatheEffect,
 			  AlphaSquareEffect,
 			  ActiveModColorEffect,
-			  LEDOff,
     
 			  Macros,
 			  MouseKeys,
