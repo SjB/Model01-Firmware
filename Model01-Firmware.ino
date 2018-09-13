@@ -102,7 +102,7 @@ KEYMAPS(
    ___, ___, ___, ___,
    ___,
 
-   M(MACRO_VERSION_INFO),  L(Backtick),   Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadSubtract, XXX,
+   M(MACRO_VERSION_INFO),  LSHIFT(Key_Backtick),   Key_Keypad7, Key_Keypad8,   Key_Keypad9,        Key_KeypadSubtract, XXX,
    ___,                    Key_Backtick,  Key_Keypad4, Key_Keypad5,   Key_Keypad6,        Key_KeypadAdd,      XXX,
                            Key_Pipe,      Key_Keypad1, Key_Keypad2,   Key_Keypad3,        Key_Equals,         Key_Quote,
    XXX,                    Key_Backslash, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadDivide,   Key_Enter,
