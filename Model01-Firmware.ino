@@ -11,7 +11,7 @@
 #include "Kaleidoscope-LEDControl.h"
 //#include "Kaleidoscope-NumPad.h"
 #include "LED-Off.h"
-#include "Kaleidoscope-DualUse.h"
+//#include "Kaleidoscope-DualUse.h"
 #include "Kaleidoscope-OneShot.h"
 #include "Kaleidoscope-TapDance.h"
 #include "Kaleidoscope-HostPowerManagement.h"
@@ -186,7 +186,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
 			  LEDOff,
 			  StalkerEffect,
 			  LEDDigitalRainEffect,
-			  WavepoolEffect,
+			  //WavepoolEffect,
 			  LEDRainbowEffect,
 			  LEDRainbowWaveEffect,
 			  LEDChaseEffect,
@@ -204,7 +204,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
     
 			  Macros,
 			  MouseKeys,
-			  DualUse,
+			  // DualUse,
 			  OneShot,
 			  TapDance,
 
