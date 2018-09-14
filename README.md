@@ -47,6 +47,8 @@ mkdir -p hardware/keyboardio
 
 ## then clone the hardware definitions to make them available to the arduino environment
 git clone --recursive https://github.com/keyboardio/Arduino-Boards.git hardware/keyboardio/avr
+git clone --recursive https://github.com/ToyKeeper/Kaleidoscope-LED-Wavepool hardware/keyboardio/avr/libraries/Kaleidoscope-LED-Wavepool
+git clone --recursive https://github.com/tremby/Kaleidoscope-LEDEffect-DigitalRain hardware/keyboardio/avr/libraries/Kaleidoscope-LEDEffect-DigitalRain
 ````
 
 
@@ -65,6 +67,8 @@ Before you begin, make sure your Model 01 is connected to your computer.
 ```sh
 cd Model01-Firmware
 make flash
+#or
+ARDUINO_PATH=/opt/arduino SKETCHBOOK_DIR=/home/sjb/Projects/ws-keyboardio make flash
 ```
 
 When the builder tells you to hit Enter to continue, hold down "Prog" in the top left corner of your keyboard and hit Enter.
