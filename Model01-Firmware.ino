@@ -11,7 +11,6 @@
 #include "Kaleidoscope-LEDControl.h"
 //#include "Kaleidoscope-NumPad.h"
 #include "LED-Off.h"
-//#include "Kaleidoscope-DualUse.h"
 #include "Kaleidoscope-OneShot.h"
 #include "Kaleidoscope-TapDance.h"
 #include "Kaleidoscope-HostPowerManagement.h"
@@ -29,15 +28,17 @@
 #include "Kaleidoscope-LEDEffect-BootGreeting.h"
 #include "Kaleidoscope-LED-Stalker.h"
 #include "Kaleidoscope-LED-AlphaSquare.h"
+#include "Kaleidoscope-Heatmap.h"
 
 enum {
-	MACRO_VERSION_INFO,
-	MACRO_TSKSWCH,
-	MACRO_VIM_CMD
+      MACRO_VERSION_INFO,
+      MACRO_TSKSWCH,
+      MACRO_VIM_CMD
 };
 
 enum {
-	TAPDANCE_TERM
+      TAPDANCE_TERM,
+      TAPDANCE_LOCK
 };
 
 enum { QWERTY, FUNCTION, NUMPAD }; // layers
@@ -54,6 +55,7 @@ enum { QWERTY, FUNCTION, NUMPAD }; // layers
 #define MT_RightBracket MT(RightAlt, RightBracket)
 
 #define TD_TERM TD(TAPDANCE_TERM)
+#define TD_LOCK TD(TAPDANCE_LOCK)
 
 // #define SJB_HOME ((Key) { .raw = HID_CONSUMER_AL_LOCAL_MACHINE_BROWSER }) // | ((Key) {0, KEY_FLAGS | SYNTHETIC|IS_CONSUMER  | HID_TYPE_RTC }).raw})
 #define SJB_HOME Consumer_AL_Local_MachineBrowser
@@ -65,18 +67,18 @@ enum { QWERTY, FUNCTION, NUMPAD }; // layers
 
 KEYMAPS(
   [QWERTY] = KEYMAP_STACKED
-  (XXX,               Key_1,            Key_2,         Key_3,      Key_4, Key_5, TD_TERM,
+  (XXX,               Key_1,            Key_2,         Key_3,      Key_4, Key_5, TD_LOCK,
    Key_Backtick,      Key_Q,            Key_W,         Key_E,      Key_R, Key_T, LCTRL(Key_Spacebar),
    Key_Backslash,     Key_A,            Key_S,         Key_D,      Key_F, Key_G,
    Key_LeftBracket,   Key_Z,            Key_X,         Key_C,      Key_V, Key_B, Key_Escape,
    OSM(LeftShift),    OSM(LeftControl), Key_Backspace, OSM(LeftAlt), 
    OSL(FUNCTION),
 
-   OSM(RightAlt),     Key_6,        Key_7,        Key_8,       Key_9,      Key_0,         Key_Minus,
-   Key_Enter,         Key_Y,        Key_U,        Key_I,       Key_O,      Key_P,         Key_Equals,
-                      Key_H,        Key_J,        Key_K,       Key_L,      Key_Semicolon, Key_Quote,
-   Key_Tab,           Key_N,        Key_M,        Key_Comma,   Key_Period, Key_Slash,     Key_RightBracket,
-   OSM(LeftAlt),      Key_Spacebar, Key_LeftGui,  OSM(RightShift),
+   OSM(RightAlt),     Key_6,        Key_7,            Key_8,       Key_9,      Key_0,         Key_Minus,
+   Key_Enter,         Key_Y,        Key_U,            Key_I,       Key_O,      Key_P,         Key_Equals,
+                      Key_H,        Key_J,            Key_K,       Key_L,      Key_Semicolon, Key_Quote,
+   Key_Tab,           Key_N,        Key_M,            Key_Comma,   Key_Period, Key_Slash,     Key_RightBracket,
+   OSM(LeftAlt),      Key_Spacebar, OSM(RightControl), OSM(RightShift),
    OSL(FUNCTION)),
 
   [FUNCTION] =  KEYMAP_STACKED
@@ -88,9 +90,9 @@ KEYMAPS(
    ___,
    XXX,           Key_F6,         Key_F7,        Key_F8,      Key_F9,         Key_F10,          Key_F11,
    ___,           Key_Home,       Key_PageDown,  Key_PageUp,  Key_End,        Key_PrintScreen,  Key_F12,
-                  Key_LeftArrow,  Key_DownArrow, Key_UpArrow, Key_RightArrow, Key_Insert,       ___,
-   ___,           SJB_CALC,       SJB_SEARCH,    SJB_EMAIL,   SJB_BROWSER,    F_TSKSWCH,        SJB_HOME,
-   ___,           ___,            Key_Enter,     ___,
+                  Key_LeftArrow,  Key_DownArrow, Key_UpArrow, Key_RightArrow, Key_Insert,       F_LOCK,
+   LALT(Key_Tab), F_TERM,         SJB_HOME,      SJB_CALC,    SJB_EMAIL,      SJB_BROWSER,      ___,
+   ___,           ___,            ___,           ___,
    ___),
 
 
@@ -142,8 +144,11 @@ static kaleidoscope::LEDSolidColor solidViolet(130, 0, 120);
 void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count, kaleidoscope::TapDance::ActionType tap_dance_action) {
 	switch(tap_dance_index) {
 	case TAPDANCE_TERM: 
-		return tapDanceActionKeys(tap_count, tap_dance_action, F_TERM, F_LOCK);
+	  return tapDanceActionKeys(tap_count, tap_dance_action, F_TERM, F_LOCK);
+	case TAPDANCE_LOCK:
+	  return tapDanceActionKeys(tap_count, tap_dance_action, Key_LeftGui, F_LOCK);
 	}
+
 }
 
 void toggleLedsOnSuspendResume(kaleidoscope::HostPowerManagement::Event event) {
@@ -180,8 +185,16 @@ USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
                  });
 
 KALEIDOSCOPE_INIT_PLUGINS(
-			  BootGreetingEffect,
+			  Macros,
+			  MouseKeys,
+			  OneShot,
+			  TapDance,
+			  HostPowerManagement,
+			  MagicCombo,
+			  USBQuirks,
+			  ActiveModColorEffect,
 			  LEDControl,
+			  BootGreetingEffect,
 			  LEDOff,
 			  StalkerEffect,
 			  LEDDigitalRainEffect,
@@ -189,6 +202,8 @@ KALEIDOSCOPE_INIT_PLUGINS(
 			  LEDRainbowEffect,
 			  LEDRainbowWaveEffect,
 			  LEDChaseEffect,
+			  HeatmapEffect,
+			  /*
 			  solidRed,
 			  solidOrange,
 			  solidYellow,
@@ -196,26 +211,13 @@ KALEIDOSCOPE_INIT_PLUGINS(
 			  solidBlue,
 			  solidIndigo,
 			  solidViolet,
+			  */
 			  LEDBreatheEffect,
-			  AlphaSquareEffect,
-			  ActiveModColorEffect,
-    
-			  Macros,
-			  MouseKeys,
-			  // DualUse,
-			  OneShot,
-			  TapDance,
-
-			  HostPowerManagement,
-			  MagicCombo,
-
-			  USBQuirks
+			  AlphaSquareEffect
 			  );
 
 void setup() {
   Kaleidoscope.setup();
-
-  // ConsumerControl.begin();
 
   ActiveModColorEffect.highlight_color = CRGB(0x00, 0xff, 0xff);
   AlphaSquare.color = { 0, 255, 0 };
