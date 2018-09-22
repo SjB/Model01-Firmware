@@ -12,6 +12,7 @@
 //#include "Kaleidoscope-NumPad.h"
 #include "LED-Off.h"
 #include "Kaleidoscope-OneShot.h"
+#include "Kaleidoscope-Escape-OneShot.h"
 #include "Kaleidoscope-TapDance.h"
 #include "Kaleidoscope-HostPowerManagement.h"
 #include "Kaleidoscope-MagicCombo.h"
@@ -188,6 +189,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
 			  Macros,
 			  MouseKeys,
 			  OneShot,
+			  EscapeOneShot,
 			  TapDance,
 			  HostPowerManagement,
 			  MagicCombo,
